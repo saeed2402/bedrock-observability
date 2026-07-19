@@ -1,0 +1,217 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0, "y": 0, "width": 24, "height": 2,
+      "properties": {
+        "markdown": "# AI Tutor - Bedrock Observability (Demo)\nDimensions: Environment, Region, Model, ServiceName, ServiceVersion, Feature, PromptVersion. Custom metrics live under `BedrockDemo`, native Bedrock metrics under `AWS/Bedrock`."
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Invocations by feature",
+        "metrics": [
+          ["BedrockDemo", "Invocations", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints"}],
+          ["BedrockDemo", "Invocations", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "solution-explainer", "PromptVersion", "v1.3", {"label": "Explanations"}],
+          ["BedrockDemo", "Invocations", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Errors by feature",
+        "metrics": [
+          ["BedrockDemo", "Errors", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints"}],
+          ["BedrockDemo", "Errors", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "solution-explainer", "PromptVersion", "v1.3", {"label": "Explanations"}],
+          ["BedrockDemo", "Errors", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "log",
+      "x": 16, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Error types (Lambda logs)",
+        "query": "SOURCE '/aws/lambda/bedrock-observability-demo' | filter @message like /ERROR/\n| parse @message 'ERROR feature=* type=*:' as feature, error_type\n| stats count(*) as total by error_type, feature\n| sort total desc",
+        "region": "us-east-1",
+        "view": "table"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 8, "width": 8, "height": 6,
+      "properties": {
+        "title": "Timeouts: prod vs staging",
+        "metrics": [
+          ["BedrockDemo", "TimeoutCount", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Prod hints"}],
+          ["BedrockDemo", "TimeoutCount", "Environment", "staging", "Region", "us-west-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.5.0-beta", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Staging hints"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 8, "width": 8, "height": 6,
+      "properties": {
+        "title": "Throttles (native AWS/Bedrock)",
+        "metrics": [
+          ["AWS/Bedrock", "InvocationThrottles", "ModelId", "openai.gpt-oss-120b-1:0"]
+        ],
+        "stat": "SampleCount",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16, "y": 8, "width": 8, "height": 6,
+      "properties": {
+        "title": "Retries: prod vs staging",
+        "metrics": [
+          ["BedrockDemo", "RetryCount", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Prod hints"}],
+          ["BedrockDemo", "RetryCount", "Environment", "staging", "Region", "us-west-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.5.0-beta", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Staging hints"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 14, "width": 8, "height": 6,
+      "properties": {
+        "title": "Latency by feature (production)",
+        "metrics": [
+          ["BedrockDemo", "Latency", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints", "stat": "Average"}],
+          ["BedrockDemo", "Latency", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "solution-explainer", "PromptVersion", "v1.3", {"label": "Explanations", "stat": "Average"}],
+          ["BedrockDemo", "Latency", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions", "stat": "Average"}]
+        ],
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries",
+        "yAxis": {"left": {"label": "ms"}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 14, "width": 8, "height": 6,
+      "properties": {
+        "title": "Time to first visible token, by prompt version",
+        "metrics": [
+          ["BedrockDemo", "TimeToFirstVisibleToken", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints v2.1"}],
+          ["BedrockDemo", "TimeToFirstVisibleToken", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "solution-explainer", "PromptVersion", "v1.3", {"label": "Explain v1.3"}],
+          ["BedrockDemo", "TimeToFirstVisibleToken", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions v3.0"}]
+        ],
+        "stat": "Average",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries",
+        "yAxis": {"left": {"label": "ms"}},
+        "annotations": {"horizontal": [{"label": "SLA: 2s", "value": 2000, "color": "#d62728"}]}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16, "y": 14, "width": 8, "height": 6,
+      "properties": {
+        "title": "Input/output tokens by feature",
+        "metrics": [
+          ["BedrockDemo", "InputTokens", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints in"}],
+          ["BedrockDemo", "OutputTokens", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints out"}],
+          ["BedrockDemo", "InputTokens", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions in"}],
+          ["BedrockDemo", "OutputTokens", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions out"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 20, "width": 8, "height": 6,
+      "properties": {
+        "title": "Cache tokens read/written (native)",
+        "metrics": [
+          ["AWS/Bedrock", "CacheReadInputTokens", "ModelId", "openai.gpt-oss-120b-1:0", {"label": "Cache read"}],
+          ["AWS/Bedrock", "CacheWriteInputTokens", "ModelId", "openai.gpt-oss-120b-1:0", {"label": "Cache write"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8, "y": 20, "width": 8, "height": 6,
+      "properties": {
+        "title": "Output tokens/sec: prod 2.4.0 vs staging 2.5.0-beta",
+        "metrics": [
+          ["BedrockDemo", "OutputTokensPerSecond", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Prod 2.4.0", "stat": "Average"}],
+          ["BedrockDemo", "OutputTokensPerSecond", "Environment", "staging", "Region", "us-west-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.5.0-beta", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Staging 2.5.0-beta", "stat": "Average"}]
+        ],
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries",
+        "yAxis": {"left": {"label": "tokens/sec"}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16, "y": 20, "width": 8, "height": 6,
+      "properties": {
+        "title": "Cost per request by feature (millicents)",
+        "metrics": [
+          ["BedrockDemo", "CostPerRequest", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Hints"}],
+          ["BedrockDemo", "CostPerRequest", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "solution-explainer", "PromptVersion", "v1.3", {"label": "Explanations"}],
+          ["BedrockDemo", "CostPerRequest", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "adaptive-questions", "PromptVersion", "v3.0", {"label": "Questions"}]
+        ],
+        "stat": "Average",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries",
+        "yAxis": {"left": {"label": "millicents"}}
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 26, "width": 8, "height": 6,
+      "properties": {
+        "title": "Cache savings: prod vs staging",
+        "metrics": [
+          ["BedrockDemo", "CacheSavings", "Environment", "production", "Region", "ap-southeast-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.4.0", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Prod hints"}],
+          ["BedrockDemo", "CacheSavings", "Environment", "staging", "Region", "us-west-2", "Model", "openai.gpt-oss-120b-1:0", "ServiceName", "ai-tutor-demo", "ServiceVersion", "2.5.0-beta", "Feature", "step-hint", "PromptVersion", "v2.1", {"label": "Staging hints"}]
+        ],
+        "stat": "Sum",
+        "period": 60,
+        "region": "us-east-1",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "type": "text",
+      "x": 8, "y": 26, "width": 16, "height": 6,
+      "properties": {
+        "markdown": "## Dimensions\n| Dimension | Values |\n|-----------|--------|\n| Environment | production, staging |\n| Region | ap-southeast-2, us-west-2 |\n| Model | openai.gpt-oss-120b-1:0 |\n| ServiceName | ai-tutor-demo |\n| ServiceVersion | 2.4.0, 2.5.0-beta |\n| Feature | step-hint, solution-explainer, adaptive-questions |\n| PromptVersion | v2.1, v1.3, v3.0 |\n\nTo slice by anything not shown here, go to CloudWatch > Metrics > All metrics > BedrockDemo."
+      }
+    }
+  ]
+}
