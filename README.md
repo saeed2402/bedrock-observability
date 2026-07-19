@@ -5,13 +5,16 @@ using CloudWatch: latency, cost, token throughput, error/throttle/timeout rates,
 and cache hit savings, all broken down by environment, feature, region, and
 prompt version.
 
-There's no real backend service here - `lambda/lambda_function.py` is a
+There's no real backend service here, `lambda/lambda_function.py` is a
 standalone Lambda that fires a batch of made-up prompts at Bedrock and
 publishes the metrics you'd care about in production. Under the hood, it
 simulates an AI tutoring app (a student asking for hints, explanations, and
 practice questions). Swap in your own prompts and it works the
-same way for any Bedrock-backed feature - the tutoring angle is only there
+same way for any Bedrock-backed feature, the tutoring angle is only there
 to give the dashboard something to show.
+
+Note that the lambda function deliberately sends ~1% of requests with an invalid
+maxTokens to keep the error-rate widget non-flat.
 
 ## What's here
 
@@ -94,6 +97,8 @@ Removes the Lambda, dashboard, IAM roles, log group, and the S3 bucket
 holding invocation logs.
 
 ## Cost
+
+Make sure to execute cleanup.sh to have resources deployed removed and stop incurring cost.
 
 Rough numbers for leaving this running for a month at low traffic volumes:
 native Bedrock metrics are free, the ~60 custom metric/dimension
